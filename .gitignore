@@ -1,0 +1,32 @@
+# Virtual environment (created by uv)
+.venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Tool caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Coverage output
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Build output
+build/
+dist/
+*.egg-info/
+
+# Secrets: real env files stay local, the example is committed
+.env
+.env.*
+!.env.example
+
+# OS and editor clutter
+.DS_Store
+.idea/
+.vscode/
