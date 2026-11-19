@@ -1,0 +1,78 @@
+[project]
+name = "rag"
+version = "0.1.0"
+description = "Production-grade RAG backend for research papers"
+readme = "README.md"
+authors = [
+    { name = "Richard Arthur", email = "33496137+lamepic@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "asyncpg>=0.32.0",
+    "fastapi>=0.165.0",
+    "pgvector>=0.5.1",
+    "pydantic-settings>=2.16.3",
+    "sqlalchemy[asyncio]>=2.1.9",
+    "structlog>=26.1.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.5.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.5",
+]
+
+# ---------------------------------------------------------------- Ruff
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle: style errors and warnings
+    "F",        # pyflakes: unused imports, undefined names
+    "I",        # isort: import ordering
+    "B",        # bugbear: likely bugs (mutable defaults, etc.)
+    "UP",       # pyupgrade: use modern Python syntax
+    "SIM",      # simplify: needlessly complex code
+    "ASYNC",    # blocking calls inside async functions
+    "S",        # bandit: security issues
+    "RUF",      # Ruff's own rules
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # assert is how pytest works
+
+# ---------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+# ---------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+# ---------------------------------------------------------------- coverage
+[tool.coverage.run]
+source = ["rag"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
