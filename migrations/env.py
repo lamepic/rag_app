@@ -12,6 +12,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
+import rag.adapters.db.models  # noqa: F401  (registers tables on Base.metadata)
 from rag.adapters.db.base import Base
 from rag.config import get_settings
 
