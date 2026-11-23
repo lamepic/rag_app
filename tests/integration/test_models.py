@@ -7,7 +7,8 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from rag.adapters.db.models import Collection, Document, DocumentStatus
+from rag.adapters.db.models import Collection, Document
+from rag.core.documents import DocumentStatus
 
 FILE_HASH = "a" * 64
 

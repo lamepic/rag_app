@@ -12,9 +12,18 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from rag.adapters.db.uow import SqlUnitOfWork
+from rag.config import Settings
 from rag.core.auth import AuthUnavailableError, CurrentUser, InvalidTokenError, TokenVerifier
 from rag.core.storage import BlobStore
 from rag.core.uow import UnitOfWork
+
+
+def get_app_settings(request: Request) -> Settings:
+    settings: Settings = request.app.state.settings
+    return settings
+
+
+SettingsDep = Annotated[Settings, Depends(get_app_settings)]
 
 
 async def get_session(request: Request) -> AsyncIterator[AsyncSession]:

@@ -9,10 +9,10 @@ import pytest
 from fastapi import FastAPI
 
 from rag.adapters.auth.jwks import JWKSTokenVerifier
-from rag.api.deps import get_token_verifier, get_uow
+from rag.api.deps import get_blob_store, get_token_verifier, get_uow
 from rag.config import Settings
 from rag.main import create_app
-from tests.fakes import InMemoryUnitOfWork
+from tests.fakes import InMemoryBlobStore, InMemoryUnitOfWork
 from tests.tokens import AUDIENCE, ISSUER, JWKS_URL, FakeJWKSServer, TokenSigner
 
 AuthHeaders = Callable[..., dict[str, str]]
@@ -34,8 +34,16 @@ def uow() -> InMemoryUnitOfWork:
 
 
 @pytest.fixture
+def blobs() -> InMemoryBlobStore:
+    return InMemoryBlobStore()
+
+
+@pytest.fixture
 async def app(
-    settings: Settings, jwks_server: FakeJWKSServer, uow: InMemoryUnitOfWork
+    settings: Settings,
+    jwks_server: FakeJWKSServer,
+    uow: InMemoryUnitOfWork,
+    blobs: InMemoryBlobStore,
 ) -> AsyncIterator[FastAPI]:
     async with jwks_server.client() as jwks_http:
         verifier = JWKSTokenVerifier(
@@ -44,6 +52,7 @@ async def app(
         app = create_app(settings)
         app.dependency_overrides[get_token_verifier] = lambda: verifier
         app.dependency_overrides[get_uow] = lambda: uow
+        app.dependency_overrides[get_blob_store] = lambda: blobs
         yield app
 
 
