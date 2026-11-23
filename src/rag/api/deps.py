@@ -12,6 +12,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from rag.core.auth import AuthUnavailableError, CurrentUser, InvalidTokenError, TokenVerifier
+from rag.core.storage import BlobStore
 
 
 async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
@@ -22,6 +23,14 @@ async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+def get_blob_store(request: Request) -> BlobStore:
+    store: BlobStore = request.app.state.blob_store
+    return store
+
+
+BlobStoreDep = Annotated[BlobStore, Depends(get_blob_store)]
 
 
 def get_token_verifier(request: Request) -> TokenVerifier:

@@ -24,4 +24,6 @@ def settings() -> Settings:
         database_url="postgresql+asyncpg://postgres:postgres@127.0.0.1:54322/postgres",
         redis_url="redis://127.0.0.1:6379/0",
         supabase_url="http://127.0.0.1:54321",
+        s3_access_key_id="unit-test-key-id",
+        s3_secret_access_key="unit-test-secret",
     )
