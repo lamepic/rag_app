@@ -10,6 +10,13 @@ from rag.config import Settings
 
 
 @pytest.fixture
+def settings() -> Settings:
+    """Overrides the hermetic unit-test settings: integration tests talk to the real local
+    services, so they read the real config (env vars, or .env locally)."""
+    return Settings(environment="test")
+
+
+@pytest.fixture
 async def db_session(settings: Settings) -> AsyncIterator[AsyncSession]:
     """A session inside a transaction that is always rolled back.
 

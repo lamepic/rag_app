@@ -129,6 +129,13 @@ file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
 
+# Uploaded papers. Private: only the API (with the S3 keys) reads and writes it.
+# The size limit and MIME type are a second line of defence behind the API's own checks.
+[storage.buckets.papers]
+public = false
+file_size_limit = "50MiB"
+allowed_mime_types = ["application/pdf"]
+
 # Allow connections via S3 compatible clients
 [storage.s3_protocol]
 enabled = true

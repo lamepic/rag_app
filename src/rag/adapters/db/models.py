@@ -1,6 +1,5 @@
 """Database tables. Every row carries owner_id, and every query filters on it."""
 
-import enum
 import uuid
 from datetime import datetime
 
@@ -8,13 +7,7 @@ from sqlalchemy import BigInteger, DateTime, Enum, ForeignKey, String, Text, Uni
 from sqlalchemy.orm import Mapped, mapped_column
 
 from rag.adapters.db.base import Base
-
-
-class DocumentStatus(enum.StrEnum):
-    QUEUED = "queued"
-    PROCESSING = "processing"
-    INDEXED = "indexed"
-    FAILED = "failed"
+from rag.core.documents import DocumentStatus
 
 
 class Collection(Base):
