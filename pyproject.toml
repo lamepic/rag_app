@@ -10,9 +10,13 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.20.1",
     "asyncpg>=0.32.0",
+    "boto3>=1.44.9",
     "fastapi>=0.165.0",
+    "httpx>=0.28.1",
     "pgvector>=0.5.1",
     "pydantic-settings>=2.16.3",
+    "pyjwt[crypto]>=2.15.1",
+    "python-multipart>=0.0.34",
     "sqlalchemy[asyncio]>=2.1.9",
     "structlog>=26.1.0",
     "uvicorn[standard]>=0.54.0",
@@ -24,7 +28,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "httpx>=0.28.1",
+    "boto3-stubs[s3]>=1.44.9",
     "mypy>=2.4.1",
     "pytest>=9.2.0",
     "pytest-asyncio>=1.5.0",
@@ -67,6 +71,9 @@ testpaths = ["tests"]
 addopts = "-ra --strict-markers --strict-config"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: needs local Supabase running (`make up`); deselect with -m 'not integration'",
+]
 
 # ---------------------------------------------------------------- coverage
 [tool.coverage.run]

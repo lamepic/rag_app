@@ -1,6 +1,6 @@
 # Developer commands. Run `make` or `make help` to list them.
 .DEFAULT_GOAL := help
-.PHONY: help install up down migrate dev run check fmt test cov
+.PHONY: help install up down migrate dev run check fmt test test-unit cov
 
 APP := rag.main:create_app
 PORT ?= 8000
@@ -27,18 +27,22 @@ dev: up migrate run ## Start everything, migrate, then run the API with auto-rel
 run: ## Run the API with auto-reload (services must already be up)
 	uv run uvicorn $(APP) --factory --reload --port $(PORT)
 
-check: ## Lint, format check, type check and test: what CI runs
+check: ## Lint, type check, schema drift check and all tests: what CI runs (needs `make up`)
 	uv run ruff check .
 	uv run ruff format --check .
 	uv run mypy
+	uv run alembic check
 	uv run pytest
 
 fmt: ## Auto-fix lint issues and reformat code
 	uv run ruff check --fix .
 	uv run ruff format .
 
-test: ## Run tests
+test: ## Run all tests (integration tests need `make up`)
 	uv run pytest
+
+test-unit: ## Run only tests that need no services
+	uv run pytest -m "not integration"
 
 cov: ## Run tests with a coverage report
 	uv run pytest --cov --cov-report=term-missing
