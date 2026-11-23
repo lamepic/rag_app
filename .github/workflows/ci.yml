@@ -20,6 +20,7 @@ jobs:
       # Same values as .env.example; there is no .env file in CI.
       RAG_DATABASE_URL: postgresql+asyncpg://postgres:postgres@127.0.0.1:54322/postgres
       RAG_REDIS_URL: redis://127.0.0.1:6379/0
+      RAG_SUPABASE_URL: http://127.0.0.1:54321
     steps:
       - uses: actions/checkout@v5
 

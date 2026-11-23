@@ -6,10 +6,12 @@ Run with: uvicorn rag.main:create_app --factory
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+import httpx
 from fastapi import FastAPI
 
+from rag.adapters.auth.jwks import JWKSTokenVerifier
 from rag.adapters.db.session import create_engine, create_sessionmaker
-from rag.api.routes import health
+from rag.api.routes import health, me
 from rag.config import Settings, get_settings
 
 
@@ -20,11 +22,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         engine = create_engine(settings)
+        http = httpx.AsyncClient(timeout=5.0)
         app.state.sessionmaker = create_sessionmaker(engine)
+        app.state.token_verifier = JWKSTokenVerifier(
+            jwks_url=settings.jwks_url,
+            issuer=settings.jwt_issuer,
+            audience=settings.jwt_audience,
+            http=http,
+        )
         yield
+        await http.aclose()
         await engine.dispose()
 
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
     app.state.settings = settings
     app.include_router(health.router)
+    app.include_router(me.router)
     return app

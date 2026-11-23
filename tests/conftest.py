@@ -23,4 +23,5 @@ def settings() -> Settings:
         environment="test",
         database_url="postgresql+asyncpg://postgres:postgres@127.0.0.1:54322/postgres",
         redis_url="redis://127.0.0.1:6379/0",
+        supabase_url="http://127.0.0.1:54321",
     )
