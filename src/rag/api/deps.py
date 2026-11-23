@@ -11,8 +11,10 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from rag.adapters.db.uow import SqlUnitOfWork
 from rag.core.auth import AuthUnavailableError, CurrentUser, InvalidTokenError, TokenVerifier
 from rag.core.storage import BlobStore
+from rag.core.uow import UnitOfWork
 
 
 async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
@@ -23,6 +25,13 @@ async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+def get_uow(session: SessionDep) -> UnitOfWork:
+    return SqlUnitOfWork(session)
+
+
+UnitOfWorkDep = Annotated[UnitOfWork, Depends(get_uow)]
 
 
 def get_blob_store(request: Request) -> BlobStore:

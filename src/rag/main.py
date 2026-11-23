@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from rag.adapters.auth.jwks import JWKSTokenVerifier
 from rag.adapters.db.session import create_engine, create_sessionmaker
 from rag.adapters.storage.s3 import S3BlobStore, create_s3_client
-from rag.api.routes import health, me
+from rag.api.routes import collections, health, me
 from rag.config import Settings, get_settings
 
 
@@ -40,4 +40,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.include_router(health.router)
     app.include_router(me.router)
+    app.include_router(collections.router)
     return app
